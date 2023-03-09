@@ -1,0 +1,75 @@
+\chapter{Sprint and Backlog Documentation}\label{cha:sprint_and_backlog_documentation}\thispagestyle{fancy}
+This chapter describes how the development workflow and the versioning system is setup. It serves
+as an explainer to understand how the project is maintained and a documentation to standardise and
+speed up the planing process. The process is described in three parts, preparation, implementation and the
+documentation of the sprint after it happens (section~\ref{sec:sprint_planing_and_versioning},~\ref{sec:implementation}
+and~\ref{sec:retrospective} respectively). It should be noted that this project follows many common practices of modern
+software development, like semantic versioning and dividing the development process into sprints. These practices
+are more of a guideline however and will not be followed exactly, as they are simply \emph{overkill} for this project.
+They more or less serve as an inspiration and provide loose frameworks to make development more manageable.
+
+\section{Semantic Versioning and Sprint Planing}\label{sec:sprint_planing_and_versioning}
+\subsection{Semantic Versioning}
+Semantic versioning is a practice used to standardize the way versions get assigned to software by giving each digit meaning. A
+version is a three digit number of integers, e.g.: v{\color{red}1}.{\color{blue}2}.{\color{green}0} . Each digit indicates a
+different kind of change / version: {\color{red}\emph{major}}, {\color{blue}\emph{minor}}, {\color{green}\emph{patch}}.
+In this project, a new version can be called an \emph{increment}. A \emph{major} increment breaks backwards compatibility (e.g:
+changing the API). \emph{Minor} increments stay  backwards compatible but add new features to the software. \emph{Patch}
+increments fix bugs or add / change smaller details.
+
+\subsection{Sprint Planing}
+The term \emph{sprint} is not exactly fitting, it will be more of a marathon. A sprint defines a short time span predefined by the
+development team. Due to external factors, the timespan for each sprint won't be predefined. New features will be added once
+they are implemented and tested. A sprint in this project should be interpreted as a set of requirements, that the developer tries
+to implement next for a given version.
+
+For each sprint, the developers in charge are free to chose which and how many requirements they implement. Try to select
+requirements that affect roughly the same area of code (modules, classes, layers, etc...). Before each sprint create a document
+(less than one page)\footnote{NOTE: I will create and link a template for this.} that lists the issues / requirements and why the
+need to be implemented. If possible, describe the solution that implements these requirements using bullet points or full
+sentences. This is not a form submitted for approval and is only for documentation purposes. In case of really small patches or
+bug fixes, there is no need to create a separate page. As a rule of thumb: If you would increment the version, create a
+documentation.
+
+\section{Implementation}\label{sec:implementation}
+\subsection{Coding Guidelines}\label{sec:coding_guidelines}
+Flexibility and extendability are the main qualities the code should fulfill (apart from actually \emph{functioning}, that is).
+For this reason it is advised to not take to many new features for a new sprint to implement and taking time to fully implement
+and test. 
+
+When coding, adhere to the best practices of the used language to handle style. Please refer to an official style documentation.
+Also, look at the following chapter~\ref{cha:styleguide} to see how the style is defined or refer to
+section~\ref{sec:tools_and_technologies} to get a list of formatters, linters and other tools to ensure a uniform code style.
+Please consider the architecture of your code. Softwaredesignpatterns offer standard implementations and solutions for many common
+problems. Use them where sensible. Ask the question, if the code is open for extension when another developer needs to come back
+to this code and add a feature.
+
+Provide docstrings for the code you write. Write them, so that another developer can use the code only with the informations
+provided by the signature and the docstring. Docstrings are used to automatically create and update the documentation for the
+code. More on the style of docstrings in chapter~\ref{cha:styleguide}. Unittest your code. Especially the functionality and
+any thrown errors should be verified by unittests. Unittests generally adhere to the same guidelines as production code.
+
+\subsection{Branching Strategy}\label{sec:branching_strategy}
+The repository will provide two branches: The main branch containing the production code and the development code, where new
+features will be integrated and tested. To run a new sprint, create a branch from development and start implementing. Once 
+implementation is finished, the code will be tested and integrated into development using a pull request. Pull requests to the
+main and development branch need approval from the owner of the repository.
+
+\section{Sprint Retrospective}\label{sec:retrospective}
+\subsection{General Retrospective}\label{sec:general_retrospective}
+\subsection{More Information}\label{sec:more_information}
+After finishing the implementation, create a pullrequest to integrate your changes with the development branch. A pullrequest 
+needs to be reviewed and approved by the owner of the repository. If the pullrequest has been approved and integrated into the
+development branch, test the application manually to verify that the rest of the application can execute normally.
+
+Create a small retrospective of your development. This is a document\footnote{NOTE: I will create and link a template for this.},
+less than one page in size, that shortly explaines the changes / implemented features and lists the implemented requirements /
+issues. It is possible to discard some of the requirements that were listed in the planning document. Reasons may be that the
+issue was closed unexpectedly, is not relevant or is not possible to implement. Be carefull when discarding requirements and 
+consider, if there is a way to implement them. Not enough time \emph{is not} a valid reason to discard an issue and be done
+early with the pull request. Take more time and open the pull request later, when the issue is implemented and tesed. If there
+have been any, please list some lessons learned at the end of the document.
+
+Please create a document regardless of whether or not a planing document has been created to start the implementation (e.g. a
+bugfix)\footnote{If possible, I will provide a smaller document template for bugfixes}. This serves as a documentation and an
+overview over what has been done.

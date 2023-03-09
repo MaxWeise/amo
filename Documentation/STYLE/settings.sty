@@ -1,0 +1,30 @@
+
+% === Default Packages ===
+\usepackage[T1]{fontenc}
+\usepackage[ngerman, english]{babel} 
+\usepackage[onehalfspacing]{setspace}
+\usepackage[left=2cm, right=2cm, bottom=3cm]{geometry}
+
+% === Colors ===
+\usepackage{xcolor}
+
+% === Tables and Figures ===
+\usepackage{array}
+\usepackage{graphicx}
+
+% === Header and Footer ===
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\fancyhf{}
+
+\lhead{}
+\chead{\textsc{AMO - Assembly, Maintenance, Observation}}
+\rhead{}
+
+\lfoot{\rightmark}
+\cfoot{}
+\rfoot{Page~\thepage~of~\pageref{LastPage}}
+
+\renewcommand{\headrulewidth}{1pt}
+\renewcommand{\footrulewidth}{1pt}
+\pagestyle{fancy}
