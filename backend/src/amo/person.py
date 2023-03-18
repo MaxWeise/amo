@@ -9,8 +9,6 @@ with the system.
 
 import dataclasses
 
-import data_objects
-
 
 @dataclasses.dataclass
 class Person:
@@ -19,15 +17,10 @@ class Person:
     Attributes:
         first_name: The first name of the person.
         last_name: The last name of the person.
-        owned_equipment: A list of equipment owned by the person. Defaults to
-            the empty list.
     """
 
     first_name: str
     last_name: str
-    owned_equipment: list[data_objects.Equipment] = dataclasses.field(
-        default_factory=list
-    )
 
 
 @dataclasses.dataclass
@@ -37,12 +30,33 @@ class User(Person):
     Attributes:
         [first_name]
         [last_name]
-        [owned_equipment]
         user_name: The user name in the system. Serves as a unique identifier.
         email: The email of the user.
         password: The password of the user.
     """
 
-    user_name: str
-    email: str
-    password: str
+    user_name: str = ""
+    email: str = ""
+    password: str = ""
+
+    def __init__(
+        self,
+        first_name: str,
+        last_name: str,
+        user_name: str = "",
+        email: str = "",
+        password: str = "",
+    ) -> None:
+        """Initialize a user object.
+
+        Arguments:
+            first_name: The first name of the user
+            last_name: The last name of the user
+            user_name: Unique identifier for the user
+            email: Email adress of the user
+            password: The password of the user
+        """
+        self.user_name = user_name
+        self.email = email
+        self.password = password
+        super().__init__(first_name, last_name)
