@@ -2,14 +2,14 @@
 
 import unittest
 
-from amo import data_objects, person
+from amo import data_objects
 
 
 class TestWeapon(unittest.TestCase):
     """Test the correct behaviour of the weapon class."""
 
     _test_id: str = "5L01"
-    _test_user: person.User | None = None
+    _test_user: data_objects.User | None = None
 
     def setUp(self) -> None:
         """Setup test environment."""
@@ -19,8 +19,8 @@ class TestWeapon(unittest.TestCase):
             "01.01.2000", self._test_user, "This is a testentry for debugging."
         )
 
-    def _create_test_user(self) -> person.User:
-        return person.User(
+    def _create_test_user(self) -> data_objects.User:
+        return data_objects.User(
             "Max",
             "Mustermann",
             user_name="maxmustermann",
@@ -36,7 +36,7 @@ class TestWeapon(unittest.TestCase):
 
     def test_changeOwner(self) -> None:
         """Test that the owner of the weapon is correctly changed."""
-        test_owner = person.Person("Bob", "Bobington")
+        test_owner = data_objects.Person("Bob", "Bobington")
         self.under_test.change_owner(test_owner)
 
         self.assertNotEqual(self.under_test.owner, self._test_user)
@@ -44,4 +44,4 @@ class TestWeapon(unittest.TestCase):
 
     def tearDown(self) -> None:
         """Destroy test environment."""
-        pass
+        super().tearDown()

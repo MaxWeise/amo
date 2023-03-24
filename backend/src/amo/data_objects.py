@@ -2,8 +2,59 @@
 
 import dataclasses
 from abc import ABC, abstractmethod
+from typing import Any
 
-from amo import person
+
+@dataclasses.dataclass
+class Person:
+    """Represent information about a human being in the system.
+
+    Attributes:
+        first_name: The first name of the person.
+        last_name: The last name of the person.
+    """
+
+    first_name: str
+    last_name: str
+
+
+@dataclasses.dataclass
+class User(Person):
+    """Represent a person that interacts with the system.
+
+    Attributes:
+        [first_name]
+        [last_name]
+        user_name: The user name in the system. Serves as a unique identifier.
+        email: The email of the user.
+        password: The password of the user.
+    """
+
+    user_name: str = ""
+    email: str = ""
+    password: str = ""
+
+    def __init__(
+        self,
+        first_name: str,
+        last_name: str,
+        user_name: str = "",
+        email: str = "",
+        password: str = "",
+    ) -> None:
+        """Initialize a user object.
+
+        Arguments:
+            first_name: The first name of the user
+            last_name: The last name of the user
+            user_name: Unique identifier for the user
+            email: Email adress of the user
+            password: The password of the user
+        """
+        self.user_name = user_name
+        self.email = email
+        self.password = password
+        super().__init__(first_name, last_name)
 
 
 @dataclasses.dataclass
@@ -11,7 +62,7 @@ class Maintenance:
     """Represent a log-entry of any changes done to the equipment."""
 
     date: str
-    maintainer: person.User
+    maintainer: User
     contents: str
 
 
@@ -28,7 +79,7 @@ class Equipment(ABC):
 
     _identifier: str
     maintenance_entries: list[Maintenance]
-    owner: person.Person
+    owner: Person
 
     def __init__(self, identifier: str) -> None:
         """Initialize an object of type equipment.
@@ -42,12 +93,21 @@ class Equipment(ABC):
         """
         self._identifier = identifier
         self.maintenance_entries = []
-        self.owner = person.Person("TSG Reutlingen", "Fencing Department")
+        self.owner = Person("TSG Reutlingen", "Fencing Department")
 
     @property
     def identifier(self) -> str:
         """The id string of the equipment."""
         return self._identifier
+
+    @abstractmethod
+    def to_dict(self) -> dict[str, Any]:
+        """Return a dictionary representation of the calling object.
+
+        Returns:
+            The object represented as a dictionary.
+        """
+        pass
 
     @abstractmethod
     def add_maintenance(self, new_entry: Maintenance) -> None:
@@ -59,7 +119,7 @@ class Equipment(ABC):
         pass
 
     @abstractmethod
-    def change_owner(self, new_owner: person.Person) -> None:
+    def change_owner(self, new_owner: Person) -> None:
         """Change the owner of the quipment.
 
         This method only modifies the calling object.
@@ -88,6 +148,18 @@ class Weapon(Equipment):
         """
         super().__init__(identifier)
 
+    def to_dict(self) -> dict[str, Any]:
+        """Return a dictionary representation of the calling object.
+
+        Returns:
+            The object represented as a dictionary.
+        """
+        return {
+            "identifier": self.identifier,
+            "maintenance": self.maintenance_entries,
+            "owner": self.owner,
+        }
+
     def add_maintenance(self, new_entry: Maintenance) -> None:
         """Add a new entry to the list of maintenances.
 
@@ -96,7 +168,7 @@ class Weapon(Equipment):
         """
         self.maintenance_entries.append(new_entry)
 
-    def change_owner(self, new_owner: person.Person) -> None:
+    def change_owner(self, new_owner: Person) -> None:
         """Change the owner of the quipment.
 
         [See base class]
