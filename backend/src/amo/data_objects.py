@@ -110,6 +110,15 @@ class Equipment(ABC):
         pass
 
     @abstractmethod
+    def to_tuple(self) -> tuple[str, list[Maintenance], Person]:
+        """Return the object as a tuple.
+
+        Returns:
+            The object represented as a tuple.
+        """
+        pass
+
+    @abstractmethod
     def add_maintenance(self, new_entry: Maintenance) -> None:
         """Add a new entry to the list of maintenances.
 
@@ -159,6 +168,14 @@ class Weapon(Equipment):
             "maintenance": self.maintenance_entries,
             "owner": self.owner,
         }
+
+    def to_tuple(self) -> tuple[str, list[Maintenance], Person]:
+        """Return the object as a tuple.
+
+        Returns:
+            The object represented as a tuple.
+        """
+        return (self.identifier, self.maintenance_entries, self.owner)
 
     def add_maintenance(self, new_entry: Maintenance) -> None:
         """Add a new entry to the list of maintenances.

@@ -17,7 +17,7 @@ from amo import data_objects
 class SqliteAdapter:
     """Implements interactions for the SQLite database."""
 
-    data_base_connection: sqlite3.Connection
+    data_base_connection: sqlite3.Connection | None
     data_base: pathlib.Path
 
     def __init__(self, database: pathlib.Path) -> None:
@@ -27,6 +27,7 @@ class SqliteAdapter:
             database: The path to the database in memory.
         """
         self.data_base = database
+        self.data_base_connection = None
 
     def connect(self) -> bool:
         """Connect to a given database.
@@ -51,7 +52,15 @@ class SqliteAdapter:
         Returns:
             bool: Sucessvalue of the operation.
         """
+        if not self.data_base_connection:
+            return False
+
         cursor = self.data_base_connection.cursor()
+        resouce_as_tuple = resouce_to_create.to_tuple()
+
+        cursor.execute("""INSERT INTO weapon VALUES (?, ?, ?)""", resouce_as_tuple)
+
+        return True
 
     def read(self) -> list[data_objects.Equipment]:
         """Read objects in the database.
