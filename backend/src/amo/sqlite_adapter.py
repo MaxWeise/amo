@@ -1,18 +1,32 @@
-"""Define the database adapter interface in this file.
+"""Define an interface to interact with a SQLite database.
 
-This file contains the database connector interface. It defines the basic set
-of operations needed to acess a database and manipulate data. The Interface
-relies on the pathlib library to represent paths to the in-memory databases.
+The clas implements the DatabaseAdapter-Interface. For more information
+look up the documentation of the Interface class.
+
+Common Usage:
+    data_base: DatabaseAdapter = SqliteAdapter()
+    data_base.connect("data_base/in/memory")
 """
 
-from pathlib import Path
-from typing import Protocol
+import pathlib
+import sqlite3
 
 from amo import data_objects
 
 
-class DatabaseAdapter(Protocol):
-    """Define a unified interface for database services."""
+class SqliteAdapter:
+    """Implements interactions for the SQLite database."""
+
+    data_base_connection: sqlite3.Connection
+    data_base: pathlib.Path
+
+    def __init__(self, database: pathlib.Path) -> None:
+        """Initialize sqlite database connection.
+
+        Args:
+            database: The path to the database in memory.
+        """
+        self.data_base = database
 
     def connect(self) -> bool:
         """Connect to a given database.
@@ -20,9 +34,14 @@ class DatabaseAdapter(Protocol):
         Returns:
             bool: Sucessvalue of the operation
         """
-        raise NotImplementedError(
-            f"The method is not implemented for the type {type(self)}"
-        )
+        rv: bool = True
+        try:
+            self.data_base_connection = sqlite3.connect(self.data_base)
+        except sqlite3.OperationalError:
+            # TODO: log exception
+            rv = False
+
+        return rv
 
     def create(self, resouce_to_create: data_objects.Equipment) -> bool:
         """Create an object in the database.
@@ -32,19 +51,15 @@ class DatabaseAdapter(Protocol):
         Returns:
             bool: Sucessvalue of the operation.
         """
-        raise NotImplementedError(
-            f"The method is not implemented for the type {type(self)}"
-        )
+        cursor = self.data_base_connection.cursor()
 
     def read(self) -> list[data_objects.Equipment]:
         """Read objects in the database.
 
         Returns:
-            list[data_objects.Equipment]: The result of the querry.
+            list[data_objects.Equipment]: The results of the querry.
         """
-        raise NotImplementedError(
-            f"The method is not implemented for the type {type(self)}"
-        )
+        ...
 
     def update(
         self,
@@ -60,9 +75,7 @@ class DatabaseAdapter(Protocol):
         Returns:
             bool: Sucessvalue of the operation.
         """
-        raise NotImplementedError(
-            f"The method is not implemented for the type {type(self)}"
-        )
+        ...
 
     def delete(self, resource_to_delete: data_objects.Equipment) -> bool:
         """Delete a given resource from the database.
@@ -74,9 +87,7 @@ class DatabaseAdapter(Protocol):
         Returns:
             bool: Successvalue of the operation.
         """
-        raise NotImplementedError(
-            f"The method is not implemented for the type {type(self)}"
-        )
+        ...
 
     def disconnect(self) -> bool:
         """Disconnect from the database.
@@ -84,6 +95,4 @@ class DatabaseAdapter(Protocol):
         Returns:
             bool: Sucessvalue of the operation
         """
-        raise NotImplementedError(
-            f"The method is not implemented for the type {type(self)}"
-        )
+        ...
