@@ -1,33 +1,36 @@
-"""Define an interface to interact with a SQLite database.
+"""Provides an interface to the TinyDB nosql database.
 
-The clas implements the DatabaseAdapter-Interface. For more information
-look up the documentation of the Interface class.
-
-Common Usage:
-    data_base: DatabaseAdapter = SqliteAdapter()
-    data_base.connect("data_base/in/memory")
+According to the documentation, the database is a wrapper for the json library
+and provides an interface to store json / dictionary objects in database style
+in memory.
 """
 
 import pathlib
-import sqlite3
+
+import tinydb
+from tinydb.table import Table
 
 from amo import data_objects
 
 
-class SqliteAdapter:
-    """Implements interactions for the SQLite database."""
+class TinyDBAdapter:
+    """Provides an interface to the tinyDB nosql Database.
 
-    data_base_connection: sqlite3.Connection | None
-    data_base: pathlib.Path
+    Attributes:
+        _db_connection_path: The path to the in memory database.
+    """
 
-    def __init__(self, database: pathlib.Path) -> None:
-        """Initialize sqlite database connection.
+    def __init__(self, db_connection_path: pathlib.Path) -> None:
+        """Initialize a database adapter.
+
+        Expects the path to a database. If the file does not exist,
+        it will be created.
 
         Args:
-            database: The path to the database in memory.
+            db_connection_path: The path to the database.
         """
-        self.data_base = database
-        self.data_base_connection = None
+        self._db_connection_path: pathlib.Path | None = db_connection_path
+        self._database: Table | None = None
 
     def connect(self) -> bool:
         """Connect to a given database.
@@ -36,12 +39,7 @@ class SqliteAdapter:
             bool: Sucessvalue of the operation
         """
         rv: bool = True
-        try:
-            self.data_base_connection = sqlite3.connect(self.data_base)
-        except sqlite3.OperationalError:
-            # TODO: log exception
-            rv = False
-
+        self._database = tinydb.TinyDB(self._db_connection_path)
         return rv
 
     def create(self, resouce_to_create: data_objects.Equipment) -> bool:
@@ -52,23 +50,19 @@ class SqliteAdapter:
         Returns:
             bool: Sucessvalue of the operation.
         """
-        if not self.data_base_connection:
-            return False
-
-        cursor = self.data_base_connection.cursor()
-        resouce_as_tuple = resouce_to_create.to_tuple()
-
-        cursor.execute("""INSERT INTO weapon VALUES (?, ?, ?)""", resouce_as_tuple)
-
-        return True
+        raise NotImplementedError(
+            f"The method is not implemented for the type {type(self)}"
+        )
 
     def read(self) -> list[data_objects.Equipment]:
         """Read objects in the database.
 
         Returns:
-            list[data_objects.Equipment]: The results of the querry.
+            list[data_objects.Equipment]: The result of the querry.
         """
-        ...
+        raise NotImplementedError(
+            f"The method is not implemented for the type {type(self)}"
+        )
 
     def update(
         self,
@@ -84,7 +78,9 @@ class SqliteAdapter:
         Returns:
             bool: Sucessvalue of the operation.
         """
-        ...
+        raise NotImplementedError(
+            f"The method is not implemented for the type {type(self)}"
+        )
 
     def delete(self, resource_to_delete: data_objects.Equipment) -> bool:
         """Delete a given resource from the database.
@@ -96,7 +92,9 @@ class SqliteAdapter:
         Returns:
             bool: Successvalue of the operation.
         """
-        ...
+        raise NotImplementedError(
+            f"The method is not implemented for the type {type(self)}"
+        )
 
     def disconnect(self) -> bool:
         """Disconnect from the database.
@@ -104,4 +102,6 @@ class SqliteAdapter:
         Returns:
             bool: Sucessvalue of the operation
         """
-        ...
+        raise NotImplementedError(
+            f"The method is not implemented for the type {type(self)}"
+        )
