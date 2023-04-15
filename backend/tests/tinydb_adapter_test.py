@@ -22,6 +22,7 @@ class TestTinyDBAdapter(unittest.TestCase):
         rv: bool = under_test.connect()
 
         self.assertTrue(rv)
+        self.assertIsNotNone(under_test._db_connection_path)
         self.assertIsNotNone(under_test._database)
 
     @unittest.skip("Not Implemented")
