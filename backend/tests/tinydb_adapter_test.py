@@ -3,6 +3,9 @@
 import pathlib
 import unittest
 
+import tinydb
+from amo import data_objects
+from amo.data_objects import Equipment
 from amo.tinydb_adapter import TinyDBAdapter
 
 
@@ -10,25 +13,20 @@ class TestTinyDBAdapter(unittest.TestCase):
     """Test Suite for the TinyDBAdapter."""
 
     def setUp(self) -> None:
-        """Setup the test environment."""
-        pass
+        """Create the test environment."""
+        self.test_database_file = pathlib.Path("./test_database_file.json")
+        self.under_test = TinyDBAdapter(self.test_database_file)
 
-    @unittest.skip("Not Implemented")
-    def test_connect(self) -> None:
-        """Test the correct connection to a database."""
-        test_path = pathlib.Path("./test_database.json")
-        under_test = TinyDBAdapter(test_path)
-
-        rv: bool = under_test.connect()
-
-        self.assertTrue(rv)
-        self.assertIsNotNone(under_test._db_connection_path)
-        self.assertIsNotNone(under_test._database)
-
-    @unittest.skip("Not Implemented")
     def test_create(self) -> None:
         """Test the correct creation of resources in the database."""
-        pass
+        # Setup Code
+        test_object: Equipment = data_objects.Weapon("#0L01")
+
+        # Run Test
+        actual = self.under_test.create(test_object)
+
+        # Assert Statements
+        self.assertTrue(actual)
 
     @unittest.skip("Not Implemented")
     def test_read(self) -> None:

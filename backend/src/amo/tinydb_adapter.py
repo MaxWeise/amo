@@ -30,17 +30,7 @@ class TinyDBAdapter:
             db_connection_path: The path to the database.
         """
         self._db_connection_path: pathlib.Path | None = db_connection_path
-        self._database: Table | None = None
-
-    def connect(self) -> bool:
-        """Connect to a given database.
-
-        Returns:
-            bool: Sucessvalue of the operation
-        """
-        rv: bool = True
         self._database = tinydb.TinyDB(self._db_connection_path)
-        return rv
 
     def create(self, resouce_to_create: data_objects.Equipment) -> bool:
         """Create an object in the database.
@@ -50,9 +40,9 @@ class TinyDBAdapter:
         Returns:
             bool: Sucessvalue of the operation.
         """
-        raise NotImplementedError(
-            f"The method is not implemented for the type {type(self)}"
-        )
+        identifier = self._database.insert(resouce_to_create.to_dict())
+
+        return bool(identifier)
 
     def read(self) -> list[data_objects.Equipment]:
         """Read objects in the database.

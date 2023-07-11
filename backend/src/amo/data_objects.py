@@ -166,7 +166,7 @@ class Weapon(Equipment):
         return {
             "identifier": self.identifier,
             "maintenance": self.maintenance_entries,
-            "owner": self.owner,
+            "owner": dataclasses.asdict(self.owner),
         }
 
     def to_tuple(self) -> tuple[str, list[Maintenance], Person]:

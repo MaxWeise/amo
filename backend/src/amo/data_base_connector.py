@@ -14,16 +14,6 @@ from amo import data_objects
 class DatabaseAdapter(Protocol):
     """Define a unified interface for database services."""
 
-    def connect(self) -> bool:
-        """Connect to a given database.
-
-        Returns:
-            bool: Sucessvalue of the operation
-        """
-        raise NotImplementedError(
-            f"The method is not implemented for the type {type(self)}"
-        )
-
     def create(self, resouce_to_create: data_objects.Equipment) -> bool:
         """Create an object in the database.
 
