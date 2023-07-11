@@ -433,3 +433,4 @@ TSWLatexianTemp*
 
 # === Custom Ignores and exceptions ===
 !./Documentation/PARTS/*
+.vim/
