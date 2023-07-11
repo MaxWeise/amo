@@ -30,7 +30,7 @@ class TinyDBAdapter:
             db_connection_path: The path to the database.
         """
         self._db_connection_path: pathlib.Path | None = db_connection_path
-        self._database = tinydb.TinyDB(self._db_connection_path)
+        self._database: Table = tinydb.TinyDB(self._db_connection_path)
 
     def create(self, resouce_to_create: data_objects.Equipment) -> bool:
         """Create an object in the database.
