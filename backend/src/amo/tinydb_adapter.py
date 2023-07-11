@@ -9,7 +9,7 @@ import pathlib
 from typing import Any
 
 import tinydb
-from tinydb.table import Table
+from tinydb.table import Document, Table
 
 from amo import data_objects
 
@@ -51,7 +51,8 @@ class TinyDBAdapter:
         Returns:
             list[data_objects.Equipment]: The result of the querry.
         """
-        data_base_contents: list[dict[str, Any]] = self._database.all()
+        # Avoids typeconflicts without explicit type conversion
+        data_base_contents: list[dict[str, Any]] = [x for x in self._database.all()]
 
         return data_base_contents
 
