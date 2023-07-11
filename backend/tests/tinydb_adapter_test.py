@@ -27,6 +27,8 @@ class TestTinyDBAdapter(unittest.TestCase):
 
         # Assert Statements
         self.assertTrue(actual)
+        actual_contents = self.under_test._database.all()
+        self.assertEqual([test_object.to_dict()], actual_contents)
 
     @unittest.skip("Not Implemented")
     def test_read(self) -> None:
@@ -50,7 +52,8 @@ class TestTinyDBAdapter(unittest.TestCase):
 
     def tearDown(self) -> None:
         """Tear down the test environment."""
-        pass
+        # Ignore FileNotFoundExeption
+        self.test_database_file.unlink(missing_ok=True)
 
 
 if __name__ == "__main__":
