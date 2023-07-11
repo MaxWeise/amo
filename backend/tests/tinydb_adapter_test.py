@@ -52,10 +52,25 @@ class TestTinyDBAdapter(unittest.TestCase):
         """Test the correct behavior when changing a resource."""
         pass
 
-    @unittest.skip("Not Implemented")
     def test_delete(self) -> None:
         """Test the correct behavior when deleting from the database."""
-        pass
+        # Setup Code
+        test_object: Equipment = data_objects.Weapon("#0L01")
+        self.under_test._database.insert(test_object.to_dict())
+        test_object_one: Equipment = data_objects.Weapon("#0L02")
+        self.under_test._database.insert(test_object_one.to_dict())
+        test_object_two: Equipment = data_objects.Weapon("#0L03")
+        self.under_test._database.insert(test_object_two.to_dict())
+
+        # Run Test
+        ret: bool = self.under_test.delete(test_object_one.identifier)
+
+        # Assert Statemens
+        self.assertTrue(ret)
+
+        actual_db_contents = self.under_test._database.all()
+        expected_db_contents = [test_object.to_dict(), test_object_two.to_dict()]
+        self.assertEqual(actual_db_contents, expected_db_contents)
 
     @unittest.skip("Not Implemented")
     def test_disconnect(self) -> None:

@@ -9,7 +9,8 @@ import pathlib
 from typing import Any
 
 import tinydb
-from tinydb.table import Document, Table
+from tinydb.queries import Query
+from tinydb.table import Table
 
 from amo import data_objects
 
@@ -74,7 +75,7 @@ class TinyDBAdapter:
             f"The method is not implemented for the type {type(self)}"
         )
 
-    def delete(self, resource_to_delete: data_objects.Equipment) -> bool:
+    def delete(self, id_to_delete: str) -> bool:
         """Delete a given resource from the database.
 
         Args:
@@ -84,16 +85,7 @@ class TinyDBAdapter:
         Returns:
             bool: Successvalue of the operation.
         """
-        raise NotImplementedError(
-            f"The method is not implemented for the type {type(self)}"
-        )
+        Weapon: Query = tinydb.queries.Query()
+        ret: list[int] = self._database.remove(Weapon.identifier == id_to_delete)
 
-    def disconnect(self) -> bool:
-        """Disconnect from the database.
-
-        Returns:
-            bool: Sucessvalue of the operation
-        """
-        raise NotImplementedError(
-            f"The method is not implemented for the type {type(self)}"
-        )
+        return bool(ret)
