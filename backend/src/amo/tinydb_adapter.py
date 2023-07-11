@@ -6,6 +6,7 @@ in memory.
 """
 
 import pathlib
+from typing import Any
 
 import tinydb
 from tinydb.table import Table
@@ -44,15 +45,15 @@ class TinyDBAdapter:
 
         return bool(identifier)
 
-    def read(self) -> list[data_objects.Equipment]:
+    def read(self) -> list[dict[str, Any]]:
         """Read objects in the database.
 
         Returns:
             list[data_objects.Equipment]: The result of the querry.
         """
-        raise NotImplementedError(
-            f"The method is not implemented for the type {type(self)}"
-        )
+        data_base_contents: list[dict[str, Any]] = self._database.all()
+
+        return data_base_contents
 
     def update(
         self,

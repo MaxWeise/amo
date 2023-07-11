@@ -2,8 +2,8 @@
 
 import pathlib
 import unittest
+from typing import Any
 
-import tinydb
 from amo import data_objects
 from amo.data_objects import Equipment
 from amo.tinydb_adapter import TinyDBAdapter
@@ -30,10 +30,22 @@ class TestTinyDBAdapter(unittest.TestCase):
         actual_contents = self.under_test._database.all()
         self.assertEqual([test_object.to_dict()], actual_contents)
 
-    @unittest.skip("Not Implemented")
     def test_read(self) -> None:
         """Test the correct behavior when reading the database."""
-        pass
+        # Setup Code
+        test_object: Equipment = data_objects.Weapon("#0L01")
+        test_object_one: Equipment = data_objects.Weapon("#0L02")
+        test_object_two: Equipment = data_objects.Weapon("#0L03")
+        entry_list: list[Equipment] = [test_object, test_object_one, test_object_two]
+        for entry in entry_list:
+            self.under_test._database.insert(entry.to_dict())
+
+        # Run Test
+        actual: list[dict[str, Any]] = self.under_test.read()
+
+        # Assert Statements
+        expected: list[dict[str, Any]] = [entry.to_dict() for entry in entry_list]
+        self.assertEqual(actual, expected)
 
     @unittest.skip("Not Implemented")
     def test_update(self) -> None:
