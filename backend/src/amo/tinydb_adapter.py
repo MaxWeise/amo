@@ -104,3 +104,13 @@ class TinyDBAdapter:
         ret: list[int] = self._database.remove(Weapon.identifier == id_to_delete)
 
         return bool(ret)
+
+    def __repr__(self) -> str:
+        """Return a string representation of the object.
+
+        This method is used for logging and debug purposes.
+
+        Returns:
+            str: The object as a string.
+        """
+        return f"TinyDB Adapter: {self._db_connection_path} | {self._database}"
