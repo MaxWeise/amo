@@ -59,7 +59,13 @@ class User(Person):
 
 @dataclasses.dataclass
 class Maintenance:
-    """Represent a log-entry of any changes done to the equipment."""
+    """Represent a log-entry of any changes done to the equipment.
+
+    Attributes:
+        date: The date of the maintenance.
+        maintainer: The person that done the maintenance.
+        contents: What the maintenance was about.
+    """
 
     date: str
     maintainer: User
@@ -106,15 +112,6 @@ class Equipment(ABC):
 
         Returns:
             The object represented as a dictionary.
-        """
-        pass
-
-    @abstractmethod
-    def to_tuple(self) -> tuple[str, list[Maintenance], Person]:
-        """Return the object as a tuple.
-
-        Returns:
-            The object represented as a tuple.
         """
         pass
 
@@ -174,14 +171,6 @@ class Weapon(Equipment):
             "owner": owner,
         }
 
-    def to_tuple(self) -> tuple[str, list[Maintenance], Person]:
-        """Return the object as a tuple.
-
-        Returns:
-            The object represented as a tuple.
-        """
-        return (self.identifier, self.maintenance_entries, self.owner)
-
     def add_maintenance(self, new_entry: Maintenance) -> None:
         """Add a new entry to the list of maintenances.
 
@@ -192,8 +181,6 @@ class Weapon(Equipment):
 
     def change_owner(self, new_owner: Person) -> None:
         """Change the owner of the quipment.
-
-        [See base class]
 
         Args:
             new_owner: The new (current) owner of the equipment.
