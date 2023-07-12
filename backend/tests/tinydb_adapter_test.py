@@ -5,7 +5,7 @@ import unittest
 from typing import Any
 
 from amo import data_objects
-from amo.data_objects import Equipment
+from amo.data_objects import Equipment, Maintenance, Person, User
 from amo.tinydb_adapter import TinyDBAdapter
 
 
@@ -47,10 +47,53 @@ class TestTinyDBAdapter(unittest.TestCase):
         expected: list[dict[str, Any]] = [entry.to_dict() for entry in entry_list]
         self.assertEqual(actual, expected)
 
-    @unittest.skip("Not Implemented")
-    def test_update(self) -> None:
+    def test_update_changeMaintenance(self) -> None:
         """Test the correct behavior when changing a resource."""
-        pass
+        # Setup Code
+        test_object: Equipment = data_objects.Weapon("#0L01")
+        self.under_test._database.insert(test_object.to_dict())
+        test_object_one: Equipment = data_objects.Weapon("#0L02")
+        self.under_test._database.insert(test_object_one.to_dict())
+
+        test_user: User = data_objects.User(
+            "user_name", "example@email.com", "Random Password"
+        )
+        test_maintenance_entry: Maintenance = data_objects.Maintenance(
+            "01.01.2000", test_user, "Test Contents"
+        )
+        test_maintenance: list[Maintenance] = [test_maintenance_entry]
+
+        # Run Test
+        ret: bool = self.under_test.update(
+            test_object, new_maintenance_list=test_maintenance
+        )
+        actual_db_contents = self.under_test._database.all()
+
+        # Assert Statements
+        self.assertTrue(ret)
+        test_object.add_maintenance(test_maintenance_entry)
+        self.assertEqual(test_object.to_dict(), actual_db_contents[0])
+        self.assertEqual(test_object_one.to_dict(), actual_db_contents[1])
+
+    def test_update_changeOwner(self) -> None:
+        """Test the correct behavior when changing a resource."""
+        # Setup Code
+        test_object: Equipment = data_objects.Weapon("#0L01")
+        self.under_test._database.insert(test_object.to_dict())
+        test_object_one: Equipment = data_objects.Weapon("#0L02")
+        self.under_test._database.insert(test_object_one.to_dict())
+
+        test_owner: Person = data_objects.Person("user_name", "example@email.com")
+
+        # Run Test
+        ret: bool = self.under_test.update(test_object, new_owner=test_owner)
+        actual_db_contents = self.under_test._database.all()
+
+        # Assert Statements
+        self.assertTrue(ret)
+        test_object.change_owner(test_owner)
+        self.assertEqual(test_object.to_dict(), actual_db_contents[0])
+        self.assertEqual(test_object_one.to_dict(), actual_db_contents[1])
 
     def test_delete(self) -> None:
         """Test the correct behavior when deleting from the database."""
@@ -71,11 +114,6 @@ class TestTinyDBAdapter(unittest.TestCase):
         actual_db_contents = self.under_test._database.all()
         expected_db_contents = [test_object.to_dict(), test_object_two.to_dict()]
         self.assertEqual(actual_db_contents, expected_db_contents)
-
-    @unittest.skip("Not Implemented")
-    def test_disconnect(self) -> None:
-        """Test the correct disconnection behavior."""
-        pass
 
     def tearDown(self) -> None:
         """Tear down the test environment."""

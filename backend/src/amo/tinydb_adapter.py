@@ -5,6 +5,7 @@ and provides an interface to store json / dictionary objects in database style
 in memory.
 """
 
+import dataclasses
 import pathlib
 from typing import Any
 
@@ -60,7 +61,8 @@ class TinyDBAdapter:
     def update(
         self,
         resouce_to_update: data_objects.Equipment,
-        new_resource: data_objects.Equipment,
+        new_maintenance_list: None | list[data_objects.Maintenance] = None,
+        new_owner: None | data_objects.Person = None,
     ) -> bool:
         """Update a given resource with the values of another resource.
 
@@ -71,9 +73,22 @@ class TinyDBAdapter:
         Returns:
             bool: Sucessvalue of the operation.
         """
-        raise NotImplementedError(
-            f"The method is not implemented for the type {type(self)}"
-        )
+        Weapon: Query = Query()
+        changed_resource: dict[str, Any] = resouce_to_update.to_dict()
+        identifier: str = resouce_to_update.identifier
+
+        if new_maintenance_list:
+            maintenance_list: list[dict[str, Any]] = [
+                dataclasses.asdict(entry) for entry in new_maintenance_list
+            ]
+
+            changed_resource["maintenance"] = maintenance_list
+
+        if new_owner:
+            changed_resource["owner"] = dataclasses.asdict(new_owner)
+
+        self._database.update(changed_resource, Weapon.identifier == identifier)
+        return True
 
     def delete(self, id_to_delete: str) -> bool:
         """Delete a given resource from the database.

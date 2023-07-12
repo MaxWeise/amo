@@ -163,10 +163,15 @@ class Weapon(Equipment):
         Returns:
             The object represented as a dictionary.
         """
+        maintenances: list[dict[str, Any]] = [
+            dataclasses.asdict(entry) for entry in self.maintenance_entries
+        ]
+        owner = dataclasses.asdict(self.owner)
+
         return {
             "identifier": self.identifier,
-            "maintenance": self.maintenance_entries,
-            "owner": dataclasses.asdict(self.owner),
+            "maintenance": maintenances,
+            "owner": owner,
         }
 
     def to_tuple(self) -> tuple[str, list[Maintenance], Person]:
