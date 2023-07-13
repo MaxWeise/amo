@@ -5,13 +5,13 @@ of operations needed to acess a database and manipulate data. The Interface
 relies on the pathlib library to represent paths to the in-memory databases.
 """
 
-from pathlib import Path
-from typing import Protocol
+import typing
+from typing import Any
 
 from amo import data_objects
 
 
-class DatabaseAdapter(Protocol):
+class DatabaseAdapter(typing.Protocol):
     """Define a unified interface for database services."""
 
     def create(self, resouce_to_create: data_objects.Equipment) -> bool:
@@ -26,7 +26,7 @@ class DatabaseAdapter(Protocol):
             f"The method is not implemented for the type {type(self)}"
         )
 
-    def read(self) -> list[data_objects.Equipment]:
+    def read(self) -> list[dict[str, Any]]:
         """Read objects in the database.
 
         Returns:
@@ -39,7 +39,8 @@ class DatabaseAdapter(Protocol):
     def update(
         self,
         resouce_to_update: data_objects.Equipment,
-        new_resource: data_objects.Equipment,
+        new_maintenance_list: None | list[data_objects.Maintenance] = None,
+        new_owner: None | data_objects.Person = None,
     ) -> bool:
         """Update a given resource with the values of another resource.
 
@@ -54,7 +55,7 @@ class DatabaseAdapter(Protocol):
             f"The method is not implemented for the type {type(self)}"
         )
 
-    def delete(self, resource_to_delete: data_objects.Equipment) -> bool:
+    def delete(self, id_to_delete: str) -> bool:
         """Delete a given resource from the database.
 
         Args:
@@ -63,16 +64,6 @@ class DatabaseAdapter(Protocol):
 
         Returns:
             bool: Successvalue of the operation.
-        """
-        raise NotImplementedError(
-            f"The method is not implemented for the type {type(self)}"
-        )
-
-    def disconnect(self) -> bool:
-        """Disconnect from the database.
-
-        Returns:
-            bool: Sucessvalue of the operation
         """
         raise NotImplementedError(
             f"The method is not implemented for the type {type(self)}"
